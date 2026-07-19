@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form</title>
+
+    <style>
+        .main-div {
+            width: 90vw;
+            max-height: calc(500px);
+            margin: 20px auto;
+            padding: 12px;
+            border: 2px solid black;
+        }
+
+        .users-list {
+            min-width: fit-content;
+            max-width: 200px;
+            max-height: 430px;
+            overflow: hidden scroll;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            & > li {
+                list-style: decimal;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Add a new User</h1>
+    <form action="/api/users" method="POST">
+        <input type="text" name="first_name" placeholder="Enter first name">
+        <input type="text" name="email" placeholder="Enter email">
+        <input type="text" name="gender" placeholder="Enter gender">
+        <input type="text" name="city" placeholder="Enter city">
+        <button type="submit">Submit</button>
+    </form>
+    <div class="main-div">
+        Users 
+        <ul class="users-list"></ul>
+    </div>
+    <script>
+        console.log("Hi, from User Form file!")
+        async function getData() {
+            let api = await fetch("/users")
+            let data = await api.json()
+            document.querySelector(".users-list").innerHTML = `
+                ${data.map((user, ind) => {
+                    return `<li>${user.first_name}</li>`
+                }).join("")}
+            `
+            console.log(data)
+        }
+
+        getData()
+    </script>
+</body>
+</html>
