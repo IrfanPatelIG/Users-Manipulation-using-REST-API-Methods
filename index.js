@@ -3,6 +3,7 @@ const fs = require("fs")
 const cors = require('cors')
 
 const users = require("./MOCK_DATA.json")
+const { error } = require("console")
 
 const app = express()
 const port = 3000
@@ -73,7 +74,7 @@ app.route("/api/users/:id")
 app.post("/api/users", (req, res) => {
     let data_body = req.body
     if (users.find(user => user.email === data_body.email)) {
-        return res.json({"Status" : "User is already present, please try with different email."})
+        return res.status(400).json({error : "User is already present, please try with different email."})
     }
     else {
         users.push({id: users[users.length-1].id + 1, ...data_body})
