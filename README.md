@@ -9,6 +9,7 @@
 ***GET***: /users -> Get all users --Done
 
 ***GET***: api/users/1 -> Get the user with ID 1 --Done
+
 ***GET***: api/users/'id' -> Get the user with ID 'id' --Done
 
 ***POST***: api/users -> Create a new user --Done
@@ -34,7 +35,7 @@
 
 ***
 
-## Running the Project
+## Run the Project
 
 1. **Start the development server**:
    ```

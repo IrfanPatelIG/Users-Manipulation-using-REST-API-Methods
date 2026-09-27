@@ -1,5 +1,7 @@
 const express = require("express")
 const fs = require("fs")
+const cors = require('cors')
+
 const users = require("./MOCK_DATA.json")
 
 const app = express()
@@ -7,17 +9,19 @@ const port = 3000
 const fileName = "./MOCK_DATA.json"
 
 // Middlewares
+app.use(cors())
 app.use(express.urlencoded({ extended:false }))
+app.use(express.static("public"))
 
 // Routes that returns JSON format data
 app.get("/api/users", (req, res) => {
-    // Returns all the users in JSON
+    // Return all the users in JSON
     return res.json(users)
 })
 
 app.route("/api/users/:id")
+    // Return user with id
     .get( (req, res) => {
-        // Return a user with id
         let id = Number (req.params.id)
         let user = users.find(user => user.id === id)
 
@@ -27,8 +31,8 @@ app.route("/api/users/:id")
             res.json({"Status" : "User doesn't exist", id})
         }
     })
+    // Edit user with id
     .patch((req, res) => {
-        // Edit user with id
         let id = Number (req.params.id)
         let data_body = req.body
         let user = users.find(u => u.id === id)
@@ -45,12 +49,13 @@ app.route("/api/users/:id")
             res.json({"Status" : "Failed to update user", id})
         }
     })
+    // Delete user with id
     .delete((req, res) => {
-        // Delete user with id
         let id = Number (req.params.id)
         let index = users.findIndex(user => user.id === id)
         
-        if (index != -1) {
+        if (index < 0) {
+            // Remove 1 element from index
             users.splice(index, 1)
             fs.writeFile(fileName, JSON.stringify(users), (err, data) => {
                 if (err) {
@@ -64,8 +69,8 @@ app.route("/api/users/:id")
         }
     })
 
+// Add a new user
 app.post("/api/users", (req, res) => {
-    // Add a new user
     let data_body = req.body
     if (users.find(user => user.email === data_body.email)) {
         return res.json({"Status" : "User is already present, please try with different email."})
@@ -91,4 +96,5 @@ app.get("/users", (req, res) => {
 
 app.listen(port, (req, res) => {
     console.log(`Server is listening on: http://localhost:${port}`)
+    console.log("Got to */users* for all users data")
 })
